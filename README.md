@@ -1,6 +1,6 @@
-# GanjiLayout
+# Ganji_Home
 ==================
 仿赶集生活app首页
 
 ##Screenshots
-![image](https://github.com/MrWebket/Ganji_home/tree/master/screenshoot/s.gif)
+![image](https://raw.githubusercontent.com/MrWebket/Ganji_home/master/screenshoot/s.gif)
