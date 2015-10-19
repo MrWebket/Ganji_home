@@ -1,4 +1,4 @@
-package com.hope.ganjihome.widget;
+package com.zzmstring.ganjilayout;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -48,7 +48,6 @@ public class PullScrollView extends FrameLayout {
     private int mState = STATE_CLOSE;
 
     private int mTopViewHeight;
-
 
     private int mMatchSlidingHeigth;
 
@@ -117,7 +116,7 @@ public class PullScrollView extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if(!mScroller.isFinished()) {
-            return false;
+            return true;
         }
         mLastY = ev.getY();
         switch (ev.getAction()) {
@@ -148,7 +147,9 @@ public class PullScrollView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        if(!mScroller.isFinished()) {
+            return false;
+        }
         mTouchLastY = event.getY();
 
         if (mVelocityTracker == null)
