@@ -1,4 +1,4 @@
-package com.zzmstring.ganjilayout;
+package com.hope.ganjihome.widget;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -54,7 +54,9 @@ public class PullScrollView extends FrameLayout {
     /**
      * 黑色遮罩
      */
-    private View mBlackMaskView;
+    private View mShadowView;
+
+    public boolean isAddshadow = true;
 
     public PullScrollView(Context context) {
         super(context);
@@ -66,6 +68,27 @@ public class PullScrollView extends FrameLayout {
 
     public PullScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setAddShadow(boolean isShadow) {
+        this.isAddshadow = isShadow;
+
+        if(isAddshadow) {
+            addShadow();
+        } else {
+            if(mShadowView != null) {
+                mTopView.removeView(mShadowView);
+            }
+        }
+    }
+
+    private void addShadow() {
+        int viewcount = mTopView.getChildCount();
+
+        mShadowView.setLayoutParams(mTopView.getLayoutParams());
+        mShadowView.setBackgroundColor(Color.BLACK);
+        int index = viewcount == 0 ? 0 : viewcount ;
+        mTopView.addView(mShadowView,index);
     }
 
     @Override
@@ -85,16 +108,11 @@ public class PullScrollView extends FrameLayout {
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
 
-        mBlackMaskView = new View(getContext());
+        mShadowView = new View(getContext());
 
         mTopView = (ViewGroup) getChildAt(0);
 
-        int viewcount = mTopView.getChildCount();
 
-        mBlackMaskView.setLayoutParams(mTopView.getLayoutParams());
-        mBlackMaskView.setBackgroundColor(Color.BLACK);
-        int index = viewcount == 0 ? 0 : viewcount ;
-        mTopView.addView(mBlackMaskView,index);
 
         mContentView = (ScrollView) getChildAt(1);
 
@@ -169,7 +187,7 @@ public class PullScrollView extends FrameLayout {
 
                     mState = STATE_OPEN_SLIDING;
 
-                    mBlackMaskView.getBackground().setAlpha((int) (255 - 255 * ((float)distanceY / (float)mTopViewHeight)));
+                    showShadowView(distanceY);
 
                     mContentView.setPadding(0, distanceY, 0, 0);
 
@@ -179,7 +197,7 @@ public class PullScrollView extends FrameLayout {
                 } else { //上滑
                     mState = STATE_CLOSE_SLIDING;
 
-                    mBlackMaskView.getBackground().setAlpha((int) (255 * ((float) distanceY / (float) mTopViewHeight)));
+                    hideShadowView(distanceY);
 
                     mContentView.setPadding(0, mTopViewHeight - distanceY, 0, 0);
 
@@ -222,6 +240,18 @@ public class PullScrollView extends FrameLayout {
         return true;
     }
 
+    public void showShadowView(int progress) {
+        if(isAddshadow) {
+            mShadowView.getBackground().setAlpha((int) (255 - 255 * (((float)progress / (float) mTopViewHeight))));
+        }
+    }
+
+    public void hideShadowView(int progress) {
+        if(isAddshadow) {
+            mShadowView.getBackground().setAlpha((int) (255 * ((float) progress / (float) mTopViewHeight)));
+        }
+    }
+
     @Override
     public void computeScroll() {
         super.computeScroll();
@@ -232,7 +262,7 @@ public class PullScrollView extends FrameLayout {
                 case STATE_CLOSE_CALLBACK:
                     mContentView.setPadding(0, mTopViewHeight - (distanceY - mScroller.getCurrY()), 0, 0);
 
-                    mBlackMaskView.getBackground().setAlpha((int) (255 - 255 * ((float) (mTopViewHeight - (distanceY - mScroller.getCurrY()) / (float) mTopViewHeight))));
+                    showShadowView(mTopViewHeight - (distanceY - mScroller.getCurrY()));
 
                     sliding = (int) (mMatchSlidingHeigth * ((float)(mTopViewHeight - (distanceY - mScroller.getCurrY())) / (float)mTopViewHeight));
 
@@ -246,7 +276,7 @@ public class PullScrollView extends FrameLayout {
                 case STATE_OPEN_CALLBACK:
                     mContentView.setPadding(0, distanceY - mScroller.getCurrY(), 0, 0);
 
-                    mBlackMaskView.getBackground().setAlpha((int) (255 - 255 * ((float) (distanceY - mScroller.getCurrY()) / (float) mTopViewHeight)));
+                    showShadowView(distanceY - mScroller.getCurrY());
 
                     sliding = (int) (mMatchSlidingHeigth * ((float)( distanceY - mScroller.getCurrY()) / (float)mTopViewHeight));
 
@@ -261,7 +291,7 @@ public class PullScrollView extends FrameLayout {
                     
                     mContentView.setPadding(0, mTopViewHeight - (distanceY + mScroller.getCurrY()), 0, 0);
 
-                    mBlackMaskView.getBackground().setAlpha((int) (255 - 255 * ((float) (mTopViewHeight - (distanceY + mScroller.getCurrY())) / (float) mTopViewHeight)));
+                    showShadowView(mTopViewHeight - (distanceY + mScroller.getCurrY()));
 
                     sliding = (int) (mMatchSlidingHeigth * ((float)(mTopViewHeight - (distanceY + mScroller.getCurrY())) / (float)mTopViewHeight));
 
@@ -276,7 +306,7 @@ public class PullScrollView extends FrameLayout {
 
                     mContentView.setPadding(0, distanceY + mScroller.getCurrY(), 0, 0);
 
-                    mBlackMaskView.getBackground().setAlpha((int) (255 - 255 * ((float) (distanceY + mScroller.getCurrY()) / (float) mTopViewHeight)));
+                    showShadowView(distanceY + mScroller.getCurrY());
 
                     sliding = (int) (mMatchSlidingHeigth * ((float)(distanceY + mScroller.getCurrY()) / (float)mTopViewHeight));
 
