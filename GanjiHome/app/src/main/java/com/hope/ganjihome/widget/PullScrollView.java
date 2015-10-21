@@ -83,12 +83,14 @@ public class PullScrollView extends FrameLayout {
     }
 
     private void addShadow() {
-        int viewcount = mTopView.getChildCount();
+        if(mTopView != null) {
+            int viewcount = mTopView.getChildCount();
 
-        mShadowView.setLayoutParams(mTopView.getLayoutParams());
-        mShadowView.setBackgroundColor(Color.BLACK);
-        int index = viewcount == 0 ? 0 : viewcount ;
-        mTopView.addView(mShadowView,index);
+            mShadowView.setLayoutParams(mTopView.getLayoutParams());
+            mShadowView.setBackgroundColor(Color.BLACK);
+            int index = viewcount == 0 ? 0 : viewcount ;
+            mTopView.addView(mShadowView,index);
+        }
     }
 
     @Override
@@ -111,8 +113,6 @@ public class PullScrollView extends FrameLayout {
         mShadowView = new View(getContext());
 
         mTopView = (ViewGroup) getChildAt(0);
-
-
 
         mContentView = (ScrollView) getChildAt(1);
 
@@ -238,6 +238,14 @@ public class PullScrollView extends FrameLayout {
                 break;
         }
         return true;
+    }
+
+    public void expandTopView() {
+        if(!mScroller.isFinished()) {
+            return;
+        }
+        mState = STATE_OPEN_SLIDING;
+        mScroller.startScroll(0 , 0, 0, mTopViewHeight, DURATION);
     }
 
     public void showShadowView(int progress) {
