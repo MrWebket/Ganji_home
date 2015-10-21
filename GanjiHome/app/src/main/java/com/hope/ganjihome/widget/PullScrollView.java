@@ -248,6 +248,15 @@ public class PullScrollView extends FrameLayout {
         mScroller.startScroll(0 , 0, 0, mTopViewHeight, DURATION);
     }
 
+    public void stretchTopView() {
+        if(!mScroller.isFinished()) {
+            return;
+        }
+        mState = STATE_CLOSE_SLIDING;
+        mScroller.startScroll(0 , 0, 0, mTopViewHeight, DURATION);
+    }
+
+
     public void showShadowView(int progress) {
         if(isAddshadow) {
             mShadowView.getBackground().setAlpha((int) (255 - 255 * (((float)progress / (float) mTopViewHeight))));

@@ -29,13 +29,19 @@ public class FullscreenActivity extends Activity {
 
         if (isFrist) {
 
-
             scrollView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     scrollView.expandTopView();
                 }
             }, 500);
+
+            scrollView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.stretchTopView();
+                }
+            }, 1500);
             isFrist = true;
         }
     }
