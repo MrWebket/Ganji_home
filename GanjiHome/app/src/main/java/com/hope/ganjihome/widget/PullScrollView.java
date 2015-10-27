@@ -241,7 +241,7 @@ public class PullScrollView extends FrameLayout {
     }
 
     public void expandTopView() {
-        if(!mScroller.isFinished()) {
+        if(!mScroller.isFinished() && (mState != STATE_OPEN || mState != STATE_CLOSE)) {
             return;
         }
         mState = STATE_OPEN_SLIDING;
@@ -249,7 +249,7 @@ public class PullScrollView extends FrameLayout {
     }
 
     public void stretchTopView() {
-        if(!mScroller.isFinished()) {
+        if(!mScroller.isFinished() && (mState != STATE_OPEN || mState != STATE_CLOSE)) {
             return;
         }
         mState = STATE_CLOSE_SLIDING;
